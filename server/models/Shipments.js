@@ -1,0 +1,44 @@
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/connection');
+
+class Shipments extends Model {}
+
+Shipments.init(
+  {
+    race_id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      allowNull: false
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    // duration: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    // },
+    host: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    gold: {
+      type: DataTypes.INTEGER,
+    },
+    silver: {
+      type: DataTypes.INTEGER,
+    },
+    bronze: {
+      type: DataTypes.INTEGER,
+    }
+  },
+  {
+    sequelize,
+    timestamps: false,
+    freezeTableName: true,
+    underscored: true,
+    modelName: 'race',
+  }
+);
+
+module.exports = Shipments;
