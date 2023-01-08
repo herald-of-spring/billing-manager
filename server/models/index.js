@@ -1,15 +1,15 @@
 const User = require('./User');
-const Race = require('./Race');
-const UserRace = require('./UserRace');
+const Shipment = require('./Shipment');
+const Advance = require('./Advance');
 
-Race.belongsToMany(User, {
-  through: UserRace,
-  foreignKey: "race_id"
+Shipment.belongsToMany(User, {
+  through: Advance,
+  foreignKey: "shipment_contract_num"
 });
 
-User.belongsToMany(Race, {
-  through: UserRace,
-  foreignKey: "user_id"
+User.belongsToMany(Shipment, {
+  through: Advance,
+  foreignKey: "created_by"
 });
 
-module.exports = { User, Race, UserRace };
+module.exports = { User, Shipment, Advance };

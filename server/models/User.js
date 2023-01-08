@@ -10,7 +10,7 @@ class User extends Model {
 
 User.init(
   {
-    username: {
+    email: {
       type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true
@@ -19,6 +19,9 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    reset_token: {
+      type: DataTypes.STRING
+    }
   },
   {
     hooks: {
