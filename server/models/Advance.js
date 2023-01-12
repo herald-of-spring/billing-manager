@@ -11,7 +11,7 @@ Advance.init(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
-    time: {
+    created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
     },
@@ -30,7 +30,7 @@ Advance.init(
       type: DataTypes.STRING
     },
     isFulfilled: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.STRING,
       defaultValue: false
     },
     shipment_contract_num: {

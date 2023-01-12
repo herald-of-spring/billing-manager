@@ -4,24 +4,40 @@ const { User } = require('../models');
 const { signToken } = require('../utils/auth');
 
 module.exports = {
-  // get a single user by email
-  async getOneUser({ user = null, params }, res) {
-    const foundUser = await User.findOne({ where: { email: user ? user.email : params.email } });
+  // get a single user by email and returns privilege level
+  async getOneUser({ user = null }, res) {
+    if (!user) {
+      return res.status(400).json({ message: 'User is not logged in.' });
+    }
 
+    const foundUser = await User.findOne({ where: { email: user.email } });
     if (!foundUser) {
       return res.status(400).json({ message: 'Cannot find a user with this email!' });
     }
 
-    res.json(foundUser);
+    res.json({ isSuper: foundUser.isSuper });
   },
   // get all users
-  async getUsers(res) {
+  async getUsers({user = null }, res) {
+    let superFlag = false
+    if (user) {
+      const curUser = await User.findOne({ where : { email: user.email }});
+      if (curUser && curUser.isSuper) {
+        superFlag = true
+      }
+    }
     const allUsers = await User.findAll();
-    
     if (!allUsers) {
       return res.status(400).json({ message: 'No users in the database.' });
     }
-
+    // filtering data based on privileges
+    for (el in allUsers) {
+      el.password = undefined;
+      el.reset_token = undefined;
+      if (!superFlag) {
+        el.isSuper = undefined;
+      }
+    }
     res.json(allUsers);
   },
   // create a user, sign a token, and send it back (to client/src/components/SignUpForm.js)
@@ -32,7 +48,7 @@ module.exports = {
       return res.status(400).json({ message: 'Something is wrong!' });
     }
     const token = signToken(user);
-    res.json({ token, user });
+    res.json({ token, user: user.email });
   },
   // login a user, sign a token, and send it back (to client/src/components/LoginForm.js)
   // {body} is destructured req.body
@@ -48,7 +64,7 @@ module.exports = {
       return res.status(400).json({ message: 'Wrong password!' });
     }
     const token = signToken(user);
-    res.json({ token, user });
+    res.json({ token, user: user.email });
   },
   // forgot password if params.code, else set code for forgot password
   async updateUser({ body, params }, res) {
@@ -72,7 +88,7 @@ module.exports = {
     if (user.reset_token && user.reset_token == params.code) {
       try {
         await user.update({ password: body.password, reset_token: null });
-        return res.json(user);
+        return res.json({ user: user.email });
       } catch (err) {
         return res.status(400).json({ message: 'An error occurred while saving your password.' });
       }

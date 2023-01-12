@@ -2,12 +2,12 @@
 const { User, Advance } = require('../models');
 
 module.exports = {
-  async getAdvance({ user = null, params }, res) {
+  async getAdvance({ user = null, body, params }, res) {
     if (!user) {
       return res.status(400).json({ message: 'User is not logged in.' });
     }
     const curUser = await User.findOne({ where: { email: user.email } });
-    if (!params.key || (params.key == "shipment" && !params.value)) {
+    if (!params.key || (params.key == "shipment" && !body.contract_num)) {
       if (!curUser.isSuper) {
         return res.status(400).json({ message: 'Missing parameters.' });
       }
@@ -16,8 +16,8 @@ module.exports = {
     }
 
     if (params.key == "user") {
-      if (curUser.isSuper && params.value) {
-        const userAdvances = await Advance.findAll({ where: { created_by: params.value } });
+      if (curUser.isSuper && body.email) {
+        const userAdvances = await Advance.findAll({ where: { created_by: body.email } });
         return res.json(userAdvances);
       }
       const myAdvances = await Advance.findAll({ where: { created_by: user.email } });
@@ -25,10 +25,10 @@ module.exports = {
     }
     if (params.key == "shipment") {
       if (curUser.isSuper) {
-        const shipmentAdvances = await Advance.findAll({ where: { shipment_contract_num: params.value } });
+        const shipmentAdvances = await Advance.findAll({ where: { shipment_contract_num: body.contract_num } });
         return res.json(shipmentAdvances);
       }
-      const myShipmentAdvances = await Advance.findAll({ where: { created_by: user.email, shipment_contract_num: params.value } });
+      const myShipmentAdvances = await Advance.findAll({ where: { created_by: user.email, shipment_contract_num: body.contract_num } });
       return res.json(myShipmentAdvances);
     }
 
@@ -81,6 +81,7 @@ module.exports = {
     if (advance.created_by != user.email || advance.isFulfilled == true) {
       return res.status(400).json({ message: 'Insufficient privileges.' });
     }
+    body.isFulfilled = undefined;
     
     await advance.update(body);
     res.json(advance);

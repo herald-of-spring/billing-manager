@@ -1,4 +1,5 @@
 // route to get logged in user's info (needs the token)
+// used
 export const getMe = (token) => {
   return fetch('/api/users/me', {
     headers: {
@@ -8,6 +9,7 @@ export const getMe = (token) => {
   });
 };
 
+// used
 export const createUser = (userData) => {
   return fetch('/api/users/create', {
     method: 'POST',
@@ -17,7 +19,7 @@ export const createUser = (userData) => {
     body: JSON.stringify(userData),
   });
 };
-
+// used
 export const loginUser = (userData) => {
   return fetch('/api/users/login', {
     method: 'POST',
@@ -28,10 +30,11 @@ export const loginUser = (userData) => {
   });
 };
 
-export const getAllUsers = () => {
+export const getAllUsers = (token) => {
   return fetch('/api/users/all', {
     headers: {
       'Content-Type': 'application/json',
+      authorization: `Bearer ${token}`,
     }
   });
 };
@@ -109,7 +112,7 @@ export const createAdvance = (token, advanceDetails) => {
   });
 };
 
-export const showAllAdvances = () => {
+export const showAllAdvances = (token) => {
   return fetch('/api/advances', {
     headers: {
       'Content-Type': 'application/json',
@@ -118,28 +121,24 @@ export const showAllAdvances = () => {
   });
 };
 
-export const showMyAdvances = (token, userId = null) => {
-  return userId 
-    ? fetch(`/api/advances/user/${userId}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${token}`,
-      },
-    }) 
-    : fetch('/api/advances/user', {
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${token}`,
-      },
-    });
-};
-
-export const showShipmentAdvances = (token, shipmentId) => {
-  return fetch(`/api/advances/shipment/${shipmentId}`, {
+export const showMyAdvances = (token, email) => {
+  return fetch('/api/advances/user', {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       authorization: `Bearer ${token}`,
     },
+    body: {email}
+  });
+};
+
+export const showShipmentAdvances = (token, contract_num) => {
+  return fetch('/api/advances/shipment', {
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${token}`,
+    },
+    body: {contract_num}
   });
 };
 

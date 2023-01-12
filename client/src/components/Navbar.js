@@ -5,34 +5,47 @@ import SignUpForm from './SignupForm';
 import LoginForm from './LoginForm';
 
 import Auth from '../utils/auth';
+import { getMe } from '../utils/API';
 
 const AppNavbar = () => {
   // set modal display state
   const [showModal, setShowModal] = useState(false);
+
+  const isSuper = async () => {
+    const response = await getMe(Auth.getToken());
+    if (!response.ok) {
+      return false;
+    }
+    const me = await response.json();
+    return me.isSuper;
+  }
 
   return (
     <>
       <Navbar bg='dark' variant='dark' expand='lg'>
         <Container fluid>
           <Navbar.Brand as={Link} to='/'>
-            Google Books Search
+            Shipment Manager
           </Navbar.Brand>
           <Navbar.Toggle aria-controls='navbar' />
           <Navbar.Collapse id='navbar'>
             <Nav className='ml-auto'>
-              <Nav.Link as={Link} to='/'>
-                Search For Books
+              <Nav.Link as={Link} to='/users'>
+                Users
               </Nav.Link>
-              {/* if user is logged in show saved books and logout */}
+              <Nav.Link as={Link} to='/'>
+                Shipments
+              </Nav.Link>
+              {/* if user is logged in show their advances and logout */}
               {Auth.loggedIn() ? (
                 <>
-                  <Nav.Link as={Link} to='/saved'>
-                    See Your Books
+                  <Nav.Link as={Link} to='/myAdvances'>
+                    My Advances
                   </Nav.Link>
-                  <Nav.Link onClick={Auth.logout}>Logout</Nav.Link>
-                </>
+                  <Nav.Link onClick={Auth.logout}>Log Out</Nav.Link>
+                </> 
               ) : (
-                <Nav.Link onClick={() => setShowModal(true)}>Login/Sign Up</Nav.Link>
+                <Nav.Link onClick={() => setShowModal(true)}>Log In/Sign Up</Nav.Link>
               )}
             </Nav>
           </Navbar.Collapse>
@@ -50,7 +63,7 @@ const AppNavbar = () => {
             <Modal.Title id='signup-modal'>
               <Nav variant='pills'>
                 <Nav.Item>
-                  <Nav.Link eventKey='login'>Login</Nav.Link>
+                  <Nav.Link eventKey='login'>Log In</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                   <Nav.Link eventKey='signup'>Sign Up</Nav.Link>

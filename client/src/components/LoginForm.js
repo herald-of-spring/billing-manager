@@ -9,6 +9,7 @@ const LoginForm = () => {
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  let errorContent;
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -29,7 +30,7 @@ const LoginForm = () => {
       const response = await loginUser(userFormData);
 
       if (!response.ok) {
-        throw new Error('something went wrong!');
+        throw new Error(response.json().message);
       }
 
       const { token, user } = await response.json();
@@ -37,11 +38,11 @@ const LoginForm = () => {
       Auth.login(token);
     } catch (err) {
       console.error(err);
+      errorContent = err;
       setShowAlert(true);
     }
 
     setUserFormData({
-      username: '',
       email: '',
       password: '',
     });
@@ -51,8 +52,9 @@ const LoginForm = () => {
     <>
       <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
         <Alert dismissible onClose={() => setShowAlert(false)} show={showAlert} variant='danger'>
-          Something went wrong with your login credentials!
+          {errorContent}
         </Alert>
+
         <Form.Group>
           <Form.Label htmlFor='email'>Email</Form.Label>
           <Form.Control
@@ -82,7 +84,7 @@ const LoginForm = () => {
           disabled={!(userFormData.email && userFormData.password)}
           type='submit'
           variant='success'>
-          Submit
+          Log In
         </Button>
       </Form>
     </>
