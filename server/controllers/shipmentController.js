@@ -2,14 +2,14 @@
 const { Shipment } = require('../models');
 
 module.exports = {
-  async getShipments({ user = null, body, params }, res) {
+  async getShipments({ user = null, params }, res) {
     if (!user) {
       return res.status(400).json({ message: 'User is not logged in.' });
     }
 
     let allShipments;
     if (params.key && params.value) {
-      allShipments = await Shipment.findAll({ where: { [params.filter] : params.value } })
+      allShipments = await Shipment.findAll({ where: { [params.key] : params.value } })
     }
     else {
       allShipments = await Shipment.findAll();

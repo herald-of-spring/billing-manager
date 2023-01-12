@@ -29,6 +29,10 @@ Advance.init(
     description: {
       type: DataTypes.STRING
     },
+    isFulfilled: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
     shipment_contract_num: {
       type: DataTypes.STRING,
       references: {

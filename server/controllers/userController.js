@@ -69,7 +69,7 @@ module.exports = {
       return res.status(400).json({ message: "Email does not exist. Please create an account." });
     }
 
-    if (user.reset_token && user.reset_token == body.code) {
+    if (user.reset_token && user.reset_token == params.code) {
       try {
         await user.update({ password: body.password, reset_token: null });
         return res.json(user);
