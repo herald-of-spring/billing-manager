@@ -16,7 +16,7 @@ module.exports = {
     }
 
     if (!allShipments) {
-      return res.status(400).json({ message: 'No shipments in the database.' });
+      return res.status(400).json({ message: 'No shipments found.' });
     }
     res.json(allShipments);
   },

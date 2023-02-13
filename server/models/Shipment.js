@@ -42,7 +42,7 @@ Shipment.init(
       type: DataTypes.STRING,
     },
     count: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     ocean_freight: {

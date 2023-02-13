@@ -26,18 +26,11 @@ module.exports = {
         superFlag = true
       }
     }
-    const allUsers = await User.findAll();
+    const allUsers = await User.findAll({ attributes: { exclude: ['password', 'reset_token', superFlag ? 'isSuper' : ''] } });
     if (!allUsers) {
       return res.status(400).json({ message: 'No users in the database.' });
     }
-    // filtering data based on privileges
-    for (el in allUsers) {
-      el.password = undefined;
-      el.reset_token = undefined;
-      if (!superFlag) {
-        el.isSuper = undefined;
-      }
-    }
+
     res.json(allUsers);
   },
   // create a user, sign a token, and send it back (to client/src/components/SignUpForm.js)

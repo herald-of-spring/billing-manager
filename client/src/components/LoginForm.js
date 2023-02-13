@@ -9,7 +9,7 @@ const LoginForm = () => {
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  let errorContent;
+  const [errorContent, setErrorContent] = useState('');
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -30,7 +30,7 @@ const LoginForm = () => {
       const response = await loginUser(userFormData);
 
       if (!response.ok) {
-        throw new Error(response.json().message);
+        throw new Error(await response.json().message);
       }
 
       const { token, user } = await response.json();
@@ -38,7 +38,7 @@ const LoginForm = () => {
       Auth.login(token);
     } catch (err) {
       console.error(err);
-      errorContent = err;
+      setErrorContent(err);
       setShowAlert(true);
     }
 
@@ -86,6 +86,10 @@ const LoginForm = () => {
           variant='success'>
           Log In
         </Button>
+      </Form>
+      <Button>Forgot Password?</Button>
+      <Form>
+        
       </Form>
     </>
   );

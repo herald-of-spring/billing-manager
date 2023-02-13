@@ -11,7 +11,8 @@ const SignupForm = () => {
   const [validated] = useState(false);
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
-  let errorContent;
+  // set state for alert message
+  const [errorContent, setErrorContent] = useState('');
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -32,7 +33,7 @@ const SignupForm = () => {
       const response = await createUser(userFormData);
 
       if (!response.ok) {
-        throw new Error(response.json().message);
+        throw new Error(await response.json().message);
       }
 
       const { token, user } = await response.json();
@@ -40,7 +41,7 @@ const SignupForm = () => {
       Auth.login(token);
     } catch (err) {
       console.error(err);
-      errorContent = err;
+      setErrorContent(err);
       setShowAlert(true);
     }
 

@@ -60,7 +60,7 @@ export const useResetToken = (reset_token, resetData) => {
 };
 
 // export const deleteUser = () => {}
-
+// used
 export const createShipment = (token, shipmentDetails) => {
   return fetch('/api/shipments/create', {
     method: 'POST',
@@ -71,7 +71,7 @@ export const createShipment = (token, shipmentDetails) => {
     body: JSON.stringify(shipmentDetails),
   });
 };
-
+// used
 export const getShipment = (token, key = null, value = null) => {
   return key 
     ? fetch(`/api/shipments/${key}/${value}`, {
@@ -87,7 +87,7 @@ export const getShipment = (token, key = null, value = null) => {
       },
     });
 };
-
+// used
 export const updateShipment = (token, shipmentId, shipmentDetails) => {
   return fetch(`/api/shipments/update/${shipmentId}`, {
     method: 'PUT',
@@ -132,6 +132,7 @@ export const showMyAdvances = (token, email) => {
   });
 };
 
+// used
 export const showShipmentAdvances = (token, contract_num) => {
   return fetch('/api/advances/shipment', {
     headers: {
